@@ -5,3 +5,6 @@
 <script src="<?=$scriptdir?>vendor/jquery-easing/jquery.easing.min.js"></script>
 <!-- Custom scripts for all pages-->
 <script src="<?=$scriptdir?>js/sb-admin.min.js"></script>
+
+<link href="<?=$scriptdir?>css/wida.css" rel="stylesheet">
+

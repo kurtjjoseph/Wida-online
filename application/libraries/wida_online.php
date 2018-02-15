@@ -45,19 +45,23 @@ class wida_online
 
 	public function loadConfig(){
 
+		$templateName = "material";
+
 		$this->config["js_files"] = array();
 		$this->config["css_files"] = array();
 		$this->config["pagetitle"] ="Wida Online";
-		$this->config["scriptdir"] ="/wida-online/assets/bootstrap/";
-		$this->config["templatescripts"] ="templates/Bootstrap/templatescripts";
-		$this->config["pagescripts"] ="templates/Bootstrap/pagescripts";
-		$this->config["navbar"] ="templates/Bootstrap/navbar";
-		$this->config["breadcrumb"] ="templates/Bootstrap/breadcrumb";
-		$this->config["content"] ="templates/Bootstrap/content";
-		$this->config["body"] ="templates/Bootstrap/body";
-		$this->config["html_header"] ="templates/Bootstrap/html_header";
-		$this->config["html_footer"] ="templates/Bootstrap/html_footer";
-		$this->config["bootstrap"] ='templates/Bootstrap/bootstrap';
+		$this->config["scriptdir"] ="/wida-online/assets/$templateName/";
+		$this->config["templatescripts"] ="templates/$templateName/templatescripts";
+		$this->config["pagescripts"] ="templates/$templateName/pagescripts";
+		$this->config["logo"] ="templates/$templateName/logo";
+		$this->config["navbar"]["top"] ="templates/$templateName/navbar";
+		$this->config["navbar"]["main"] ="templates/$templateName/navbar_main";
+		$this->config["breadcrumb"] ="templates/$templateName/breadcrumb";
+		$this->config["content"] ="templates/$templateName/content";
+		$this->config["body"] ="templates/$templateName/body";
+		$this->config["html_header"] ="templates/$templateName/html_header";
+		$this->config["html_footer"] ="templates/$templateName/html_footer";
+		$this->config["bootstrap"] ="templates/$templateName/bootstrap";
 
 
 		$pages =  array();

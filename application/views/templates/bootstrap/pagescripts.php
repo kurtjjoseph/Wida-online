@@ -25,3 +25,4 @@ foreach($css_files as $file): ?>
 	});
 
 </script>
+

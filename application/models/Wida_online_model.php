@@ -34,7 +34,7 @@ class Wida_online_model  extends CI_Model  {
 	public function getSongs()
 	{
 		$list = $this->db->order_by('Title',"Asc")
-			->select("`id`, `Title`,`Tempo`, `Time`, `Key`, `YoutubeLink`")
+			->select("`id`, `Title`,`Tempo`, `Time`, `Key`, `Author`, `YoutubeLink`")
 			->get('wida_allsongs')
 			->result();
 		return $list;

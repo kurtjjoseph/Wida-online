@@ -42,7 +42,9 @@ class Home extends CI_Controller {
 
 		$viewScope['templatescripts'] = $this->load->view($wida->config['templatescripts'], $viewScope, true);
 		$viewScope['pagescripts'] = $this->load->view($wida->config['pagescripts'] , $viewScope, true);
-		$viewScope['navbar'] = $this->load->view($wida->config['navbar'] , $viewScope, true);
+		$viewScope['logo'] = $this->load->view($wida->config['logo'] , $viewScope, true);
+		$viewScope['navbar']["top"] = $this->load->view($wida->config['navbar']["top"] , $viewScope, true);
+		$viewScope['navbar']["main"] = $this->load->view($wida->config['navbar']["main"], $viewScope, true);
 		$viewScope['body'] = $this->load->view($wida->config['body'] , $viewScope, true);
 		$viewScope['html_header'] = $this->load->view($wida->config['html_header'] , $viewScope, true);
 		$viewScope['html_footer'] = $this->load->view($wida->config['html_footer'] , $viewScope, true);

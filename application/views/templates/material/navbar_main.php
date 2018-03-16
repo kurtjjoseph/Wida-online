@@ -7,7 +7,10 @@
 				<span class="icon-bar"></span>
 				<span class="icon-bar"></span>
 			</button>
-			<a class="navbar-brand" href="#"> <?= $pagetitle ?> </a>
+			<a class="navbar-brand" href="<?php echo site_url($pagelink) ?>"> <?= $pagetitle ?> </a>
+			<?php if($pageaddlink){ ?>
+				<a class="navbar-brand" href="<?php echo site_url($pageaddlink) ?>"> <i class="material-icons">add</i> Nieuw</a>
+			<?php }; ?>
 		</div>
 		<div class="collapse navbar-collapse">
 			<ul class="nav navbar-nav navbar-right">

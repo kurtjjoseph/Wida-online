@@ -42,6 +42,14 @@ class wida_online
 
 	}
 
+	public function saveSong($id, $songdata)
+	{
+		$wom = new Wida_online_model();
+
+		return $wom->saveSong($id,$songdata);
+
+	}
+
 
 	public function loadConfig(){
 

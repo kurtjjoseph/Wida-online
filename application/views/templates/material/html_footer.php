@@ -1,31 +1,25 @@
 <nav class="pull-left">
 	<ul>
 		<li>
-			<a href="#">
-				Home
+			<a href="<?php echo site_url('/home') ?>">
+				Overzicht
 			</a>
 		</li>
 		<li>
-			<a href="#">
-				Company
+			<a href="<?php echo site_url('/songs') ?>">
+				Liederen
 			</a>
 		</li>
 		<li>
-			<a href="#">
-				Portfolio
+			<a href="<?php echo site_url('/profile') ?>">
+				Profile
 			</a>
 		</li>
 		<li>
-			<a href="#">
-				Blog
+			<a href="http://www.worshipinfo.nl">
+				Worshipinfo.nl
 			</a>
 		</li>
 	</ul>
 </nav>
-<p class="copyright pull-right">
-	&copy;
-	<script>
-		document.write(new Date().getFullYear())
-	</script>
-	<a href="http://www.worshipinfo.nl">WorshipInfo</a> Desire more
-</p>
+

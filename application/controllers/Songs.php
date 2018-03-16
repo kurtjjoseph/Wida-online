@@ -37,18 +37,23 @@ class Songs extends CI_Controller {
 
 		$viewScope['js_files'] = $wida->config['js_files'] ;
 		$viewScope['css_files'] = $wida->config['css_files'] ;
-		$viewScope['pagetitle'] = $wida->config['pagetitle']  ;
+		$viewScope['pagetitle'] = "Liederen" ;
+		$viewScope['pagelink'] = "/songs" ;
+		$viewScope['pageaddlink'] = "songs/addsong" ;
 		$viewScope['scriptdir'] = $wida->config['scriptdir'] ;
 
 		$viewScope['templatescripts'] = $this->load->view($wida->config['templatescripts'], $viewScope, true);
 		$viewScope['pagescripts'] = $this->load->view($wida->config['pagescripts'] , $viewScope, true);
-		$viewScope['navbar'] = $this->load->view($wida->config['navbar'] , $viewScope, true);
+		$viewScope['logo'] = $this->load->view($wida->config['logo'] , $viewScope, true);
+		$viewScope['navbar']["top"] = $this->load->view($wida->config['navbar']["top"] , $viewScope, true);
+		$viewScope['navbar']["main"] = $this->load->view($wida->config['navbar']["main"], $viewScope, true);
 		$viewScope['body'] = $this->load->view($wida->config['body'] , $viewScope, true);
 		$viewScope['html_header'] = $this->load->view($wida->config['html_header'] , $viewScope, true);
 		$viewScope['html_footer'] = $this->load->view($wida->config['html_footer'] , $viewScope, true);
 
 		$this->load->view($wida->config['bootstrap'], $viewScope);
 	}
+
 
 	public function render_content($viewScope)
 	{
@@ -94,13 +99,14 @@ class Songs extends CI_Controller {
 		$data = array();
 		$data["selectedsong"] = $wida->getSong($index);
 		$viewScope['content'] = $this->load->view('selectedSong', $data, true);
-
+		$viewScope['pagetitle'] = "Liederen";
+		$viewScope['pagelink'] = "/songs" ;
+		$viewScope['pageaddlink'] = "/songs/add" ;
 
 		$this->breadcrumbs = new Breadcrumbs();
 
 		// add breadcrumbs
 		$this->breadcrumbs->push('Liederen', '/songs');
-		$this->breadcrumbs->push('Song', '/song');
 		$this->breadcrumbs->push($data['selectedsong']->Title, '/song');
 		// output
 		$viewScope["breadcrumbdata"]["output"] = $this->breadcrumbs->show();
@@ -109,25 +115,89 @@ class Songs extends CI_Controller {
 	}
 
 
+	public function save($index)
+	{
+		$viewScope = array();
+		$wida = new Wida_online();
+
+		$songdata = array(
+
+			'Title' => $this->input->post('Title'),
+			'Author' => $this->input->post('Author'),
+			'Key' => $this->input->post('Key'),
+			'Tempo' => $this->input->post('Tempo'),
+			'Time' => $this->input->post('Time'),
+			'YoutubeLink' => $this->input->post('YoutubeLink'),
+			'Data' => $this->input->post('Data'),
+			'Text' => $this->input->post('Text')
+		);
+
+		$data["selectedsong"] = $wida->saveSong($index, $songdata);
+		$viewScope['savedsong'] =  true;
+
+		$viewScope['content'] = $this->load->view('editSong', $data, true);
+		$viewScope['pagetitle'] = "Liederen";
+		$viewScope['pagelink'] = "/songs" ;
+		$viewScope['pageaddlink'] = "/songs/add" ;
+
+		$this->breadcrumbs = new Breadcrumbs();
+
+		// add breadcrumbs
+		$this->breadcrumbs->push('Liederen', '/songs');
+		$this->breadcrumbs->push($data['selectedsong']->Title, '/song');
+		// output
+		$viewScope["breadcrumbdata"]["output"] = $this->breadcrumbs->show();
+
+		$this->render($viewScope);
+
+	}
+	public function edit($index)
+	{
+		$viewScope = array();
+		$wida = new Wida_online();
+		$data = array();
+		$data["selectedsong"] = $wida->getSong($index);
+		$viewScope['content'] = $this->load->view('editSong', $data, true);
+		$viewScope['pagetitle'] = "Liederen";
+		$viewScope['pagelink'] = "/songs" ;
+		$viewScope['pageaddlink'] = "/songs/add" ;
+
+		$this->breadcrumbs = new Breadcrumbs();
+
+		// add breadcrumbs
+		$this->breadcrumbs->push('Liederen', '/songs');
+		$this->breadcrumbs->push($data['selectedsong']->Title, '/song');
+		// output
+		$viewScope["breadcrumbdata"]["output"] = $this->breadcrumbs->show();
+
+		$this->render($viewScope);
+	}
 
 	public function render($viewScope)
 	{
 		$wida = new Wida_online();
-		//$viewScope['content'] = $this->load->view($wida->config['content'], (array)$contentdata, true);
 
+
+		$viewScope['breadcrumbdata'] = $this->render_breadcrumb($viewScope);
 		$viewScope['breadcrumb'] = $this->load->view($wida->config['breadcrumb'] , $viewScope, true);
+
+
 		$viewScope['js_files'] = $wida->config['js_files'] ;
 		$viewScope['css_files'] = $wida->config['css_files'] ;
-		$viewScope['pagetitle'] = $wida->config['pagetitle']  ;
 		$viewScope['scriptdir'] = $wida->config['scriptdir'] ;
+
 		$viewScope['templatescripts'] = $this->load->view($wida->config['templatescripts'], $viewScope, true);
 		$viewScope['pagescripts'] = $this->load->view($wida->config['pagescripts'] , $viewScope, true);
-		$viewScope['navbar'] = $this->load->view($wida->config['navbar'] , $viewScope, true);
+		$viewScope['logo'] = $this->load->view($wida->config['logo'] , $viewScope, true);
+		$viewScope['navbar']["top"] = $this->load->view($wida->config['navbar']["top"] , $viewScope, true);
+		$viewScope['navbar']["main"] = $this->load->view($wida->config['navbar']["main"], $viewScope, true);
 		$viewScope['body'] = $this->load->view($wida->config['body'] , $viewScope, true);
 		$viewScope['html_header'] = $this->load->view($wida->config['html_header'] , $viewScope, true);
 		$viewScope['html_footer'] = $this->load->view($wida->config['html_footer'] , $viewScope, true);
 
 		$this->load->view($wida->config['bootstrap'], $viewScope);
+
+
 	}
 
 	public function songlist()

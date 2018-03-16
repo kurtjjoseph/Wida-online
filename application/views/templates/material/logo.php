@@ -1,5 +1,5 @@
 <div class="logo">
 	<a href="<?php echo site_url('/') ?>"class="simple-text">
-		Menu
+		Wida Online
 	</a>
 </div>

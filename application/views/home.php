@@ -1,28 +1,62 @@
-<!DOCTYPE html>
-<html>
-<head>
-	<meta charset="utf-8" />
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<?php
-	foreach($css_files as $file): ?>
-		<link type="text/css" rel="stylesheet" href="<?php echo $file; ?>" />
-	<?php endforeach; ?>
-	<?php foreach($js_files as $file): ?>
-		<script src="<?php echo $file; ?>"></script>
-	<?php endforeach; ?>
-</head>
-<body>
-<?php echo $html_head ?>
-<?php echo $navbar ?>
-
 <div>
 	<a href='<?php echo site_url('examples/songs_management')?>'>Songs</a>
-	<h1>Latest songs</h1>
-	<?php echo $latestsongs ?>
-	<h1>Selected song</h1>
-	<?php echo $selectedsong ?>
+
+	<div class="row">
+		<div class="col-lg-4 col-md-6 col-sm-12">
+			<div class="card">
+				<div class="card-header card-header-text" data-background-color="purple">
+					<h4 class="card-title">Volgende Dienst</h4>
+				</div>
+				<div class="card-content">
+
+				</div>
+			</div>
+		</div>
+		<div class="col-lg-4 col-md-6 col-sm-12">
+			<div class="card">
+				<div class="card-header card-header-text" data-background-color="purple">
+					<h4 class="card-title">Opkomende liederen</h4>
+				</div>
+				<div class="card-content">
+
+				</div>
+			</div>
+		</div>
+		<div class="col-lg-4 col-md-12 col-sm-12">
+			<div class="card">
+				<div class="card-header card-header-text" data-background-color="purple">
+					<h4 class="card-title">Kalender</h4>
+				</div>
+				<div class="card-content">
+
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="col-lg-6 col-md-6 col-sm-12">
+			<div class="card">
+				<div class="card-header card-header-text" data-background-color="purple">
+					<h4 class="card-title">Latest Songs</h4>
+				</div>
+				<div class="card-content">
+
+				</div>
+			</div>
+		</div>
+		<div class="col-lg-6 col-md-6 col-sm-12">
+			<div class="card">
+				<div class="card-header card-header-text" data-background-color="purple">
+					<h4 class="card-title">Latest Songs</h4>
+				</div>
+				<div class="card-content">
+
+				</div>
+			</div>
+		</div>
+
+	</div>
 </div>
-<?php echo $html_footer ?>
-</body>
-</html>
+
 

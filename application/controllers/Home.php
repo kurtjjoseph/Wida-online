@@ -23,6 +23,11 @@ class Home extends CI_Controller {
 		$wida = new Wida_online();
 
 		$viewScope = array();
+		$viewScope['active'] = "home";
+
+		$viewScope['latestsongs'] = array();
+		$viewScope['selectedsong'] = array();
+
 
 		$contentdata = $this->render_content($viewScope);
 
@@ -37,7 +42,12 @@ class Home extends CI_Controller {
 
 		$viewScope['js_files'] = $wida->config['js_files'] ;
 		$viewScope['css_files'] = $wida->config['css_files'] ;
-		$viewScope['pagetitle'] = $wida->config['pagetitle']  ;
+		$viewScope['pagetitle'] = "Overzicht";
+
+
+		$viewScope['pagelink'] = "" ;
+		$viewScope['pageaddlink'] = "" ;
+
 		$viewScope['scriptdir'] = $wida->config['scriptdir'] ;
 
 		$viewScope['templatescripts'] = $this->load->view($wida->config['templatescripts'], $viewScope, true);
@@ -58,7 +68,7 @@ class Home extends CI_Controller {
 
 		$output["js_files"] = array();
 		$output["css_files"] = array();
-		$output["output"] = "";
+		$output["output"] = $this->load->view("home", $viewScope, true);
 
 		return $output;
 	}

@@ -1,7 +1,7 @@
 <?php
 
 
-class wida_online
+class Wida_Online
 {
 	var $ci;
 	var $wom;
@@ -32,6 +32,28 @@ class wida_online
 	{
 		$wom = new Wida_online_model();
 		return $wom->getSong($id);
+
+	}
+
+	public function getNewSong()
+	{
+		$wom = new Wida_online_model();
+		return $wom->getNewSong();
+
+	}
+
+
+	public function getChord($spelling)
+	{
+		$wom = new Wida_online_model();
+		return $wom->getChord($spelling);
+
+	}
+
+	public function getChords()
+	{
+		$wom = new Wida_online_model();
+		return $wom->getChords();
 
 	}
 

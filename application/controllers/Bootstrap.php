@@ -10,7 +10,7 @@ class Bootstrap extends CI_Controller {
 
 		$this->load->library('grocery_CRUD');
 
-		$this->load->library('wida_online');
+		$this->load->library('Wida_Online');
 	}
 
 	public function index()

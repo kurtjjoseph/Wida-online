@@ -10,6 +10,7 @@
 			<i class="material-icons">music_note</i>
 			<p>Liederen</p>
 		</a>
+
 	</li>
 	<li <?php echo $this->uri->segment(1)=="playlists"? "class='active'":""?>>
 		<a href="<?php echo site_url('/playlists') ?>">
@@ -41,6 +42,19 @@
 			<p>Meldingen</p>
 		</a>
 	</li>
+	<li <?php echo $this->uri->segment(1)=="profile"? "class='active'":""?>>
+		<a href="<?php echo site_url('/profile') ?>">
+			<i class="material-icons text-gray">person</i>
+			<p>Profile</p>
+		</a>
+	</li>
+	<li <?php echo $this->uri->segment(1)=="admin"? "class='active'":""?>>
+		<a href="<?php echo site_url('/admin') ?>">
+			<i class="material-icons text-gray">settings</i>
+			<p>Admin</p>
+		</a>
+	</li>
+
 
 </ul>
 

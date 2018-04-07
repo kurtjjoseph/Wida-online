@@ -2,9 +2,7 @@
 foreach ($css_files as $file): ?>
 	<link type="text/css" rel="stylesheet" href="<?php echo $file; ?>"/>
 <?php endforeach; ?>
-<?php foreach ($js_files as $file): ?>
-	<script src="<?php echo $file; ?>"></script>
-<?php endforeach; ?>
+
 
 <style>
 	.boxsizingBorder {
@@ -90,10 +88,38 @@ foreach ($css_files as $file): ?>
 		font-weight: bold;
 		text-decoration: underline;
 	}
+
 	.section .chord {
 		font-weight: bold;
 	}
 
+	.preformatted {
+		font-family: monospace;
+		white-space: pre;
+	}
+
+	.fa-b {
+		background: url("http://localhost/wida-online/assets/common/img/b.svg");
+		width: 20px;
+		height: 20px;
+		display: block;
+		padding-left: 20px;
+	}
+
+	.btn-purple {
+		color: #fff;
+		border-color: #fff;
+		background: linear-gradient(60deg, #ab47bc, #b831de);
+	}
+
+	.chord {
+		color: orangered;
+		font-weight: bold;
+	}
+
+	html {
+		overflow: hidden;
+	}
 
 </style>
 
@@ -154,32 +180,64 @@ foreach ($css_files as $file): ?>
 	}
 
 	// Edit song form logic
-	$("#youtubelink").change(setPreview);
-	$("#songtext").on('input',setPreview);
-	$("#chordinput").on('input',setPreview);
-	$("#fillchords").on('input',fillChords);
+	$("#youtubelink").change(setVideoPreview);
+	$("#songtext").on('input', setPreview);
+	$("#chordinput").on('input', setPreview);
+	$("#fillchords").click(fillChords);
 	$("#updatechords").click(setPreview);
 
+	$("#songtext").val($("#songtext").val().replace(/\t/, "        "));
+	setVideoPreview();
 	setPreview();
 
+
 	function setPreview() {
+		var parsedSong = parseSong($("#songtext").val());
+		parsedSong.title = $("#Title").val();
+		parsedSong.key = $("#Key").val();
+		parsedSong.author = $("#Author").val();
+
+		$("#textpreview").html(parsedSong.getHtmlView());
+		setChordInput(parsedSong);
+		pdfView(parsedSong);
+	}
+
+
+	function setVideoPreview() {
+
+		//
+		// <iframe width="560" height="315" src="http://www.youtube.com/embed/0vrdgDdPApQ?playlist=cbut2K6zvJY,7iw30sK2UCo,sYV5MTy0v1I" frameborder="0" allowfullscreen></iframe>
+		// 	'drumcover' => $this->input->post('drumcover'),
+		// 		'basscover' => $this->input->post('basscover'),
+		// 		'zangcover' => $this->input->post('zangcover'),
+		// 		'pianocover' => $this->input->post('pianocover'),
+		// 		'elguitarcover' => $this->input->post('elguitarcover'),
+		// 		'acguitarcover'
+
 		var youtubeid = parseLink($("#youtubelink").val());
+		var drumcover = parseLink($("#drumcover").val());
+		var basscover = parseLink($("#basscover").val());
+		var zangcover = parseLink($("#zangcover").val());
+		var pianocover = parseLink($("#pianocover").val());
+		var elguitarcover = parseLink($("#elguitarcover").val());
+		var acguitarcover = parseLink($("#acguitarcover").val());
+
+		var playlist = [drumcover, basscover, zangcover, pianocover, elguitarcover, acguitarcover];
+		playlist = playlist.filter(function (e) {
+			return e
+		}).join(",");
+		if (playlist !== "") {
+			playlist = "?playlist=" + playlist
+		}
 		$(".youtube-preview").html(
 			"<iframe id=\"songVideo\" width=\"100%\" height=\"347\" src=\"//www.youtube.com/embed/"
 			+ youtubeid +
+			playlist +
 			"\" frameborder=\"0\" allowfullscreen></iframe>"
 		);
 
-		var parsedSong = parseSong($("#songtext").val());
-
-		setChordInput(parsedSong);
-
-
-		var string = pdfView(parsedSong);
-		$('.preview-pane').attr('src', string);
-		$("#textpreview").html(parsedSong);
-
 	}
+
 
 	function fillChords() {
 		var song = parseSong($("#songtext").val());
@@ -193,11 +251,18 @@ foreach ($css_files as $file): ?>
 
 		var newChords = $("#chordinput").val();
 
-		var newChordsJson = eval($("#chordinput").val());
+		try {
+			var newChordsJson = eval($("#chordinput").val());
 
-		$("#chordinput").html(song.formatChordLibrary(newChordsJson[0]));
+			$("#chordinput").val(song.formatChordLibrary(newChordsJson[0]));
 
-		showChords(song, song.chordlibrary);
+			showChords(song, song.chordlibrary);
+		} catch (e) {
+			if (e instanceof SyntaxError) {
+				//alert(e.message);
+			}
+		}
+
 	}
 
 	function parseLink(input) {
@@ -206,11 +271,10 @@ foreach ($css_files as $file): ?>
 		return parts[parts.length - 1];
 	}
 
-
 	function showChords(song, chordlibrary) {
 		var container = $("#chords");
 
-		$("#chords").html("");
+		//$("#chords").html("test");
 
 
 		for (var property in chordlibrary) {
@@ -300,57 +364,51 @@ foreach ($css_files as $file): ?>
 		return song;
 	}
 
-
-	function isEmptyLine(input) {
-		return input.trim().length == 0;
-	}
-
-	function isTextLine(input) {
-		if (input == null) return false;
-		var matches = input.match(/:/);
-		if (matches == null) return false;
-		return matches;
-	}
-
-	function isTitleLine(input) {
-		if (input == null) return false;
-		var matches = input.match(/:/);
-		if (matches == null) return false;
-		return matches;
-	}
-
-	function isChordLine(input) {
-		var chordsRegex = /\\b[A-G][#b]?(minmaj|min|maj|dim|°|mi|m|M|aug|sus)?[+246/9713]*[A-G]?[#b]?\\b/;
-		var noteRegex = /[A-G][#b]?/;
-
-		if (input == null) return false;
-		var matches = input.match(chordsRegex);
-		if (matches == null) return false;
-		return matches;
-	}
+	function pdfView(song) {
+		var pdf = new jsPDF();
 
 
-	function pdfView(input) {
-		var doc = new jsPDF();
+		song.toPDF(pdf);
 
-		// We'll make our own renderer to skip this editor
-		var specialElementHandlers = {
-			'#editor': function (element, renderer) {
-				return true;
-			},
-			'.controls': function (element, renderer) {
-				return true;
+		// pdf.setFont("helvetica");
+		// pdf.setFontType("bold");
+		// pdf.text(20, 50, 'This i');
+
+		if (typeof pdf !== 'undefined') try {
+			if (navigator.msSaveBlob) {
+				// var string = pdf.output('datauristring');
+				string = 'http://microsoft.com/thisdoesnotexists';
+				console.error('Sorry, we cannot show live PDFs in MSIE')
+			} else {
+				var string = pdf.output('bloburi');
 			}
-		};
+			$('.preview-pane').attr('src', string+'#zoom=50');
+		} catch(e) {
+			alert('Error ' + e);
+		}
 
-		// All units are in the set measurement for the document
-		// This can be changed to "pt" (points), "mm" (Default), "cm", "in"
-		doc.fromHTML(input.text, 15, 15, {
-			'width': 170,
-			'elementHandlers': specialElementHandlers
-		});
-		return doc.output('bloburi');
 	}
 
+	function renderChords() {
+
+		var draw = SVG('drawing').size(300, 300);
+		var rect = draw.rect(100, 100).attr({fill: '#f06'});
+		rect.mousedown(function () {
+			this.fill({color: '#006'})
+		});
+		rect.mouseup(function () {
+			this.fill({color: '#f06'})
+		});
+		rect.mouseover(function () {
+			this.fill({color: '#026'})
+		});
+		rect.mouseout(function () {
+			this.fill({color: '#f06'})
+		});
+	}
 
 </script>
+test
+<?php foreach ($js_files as $file): ?>
+	<script src="<?php echo $file; ?>"></script>
+<?php endforeach; ?>

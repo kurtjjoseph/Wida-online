@@ -10,12 +10,11 @@
 <script src="<?= $scriptdir ?>assets/js/perfect-scrollbar.jquery.min.js"></script>
 <!--  Notifications Plugin    -->
 <script src="<?= $scriptdir ?>assets/js/bootstrap-notify.js"></script>
-<!--  Google Maps Plugin    -->
-<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=YOUR_KEY_HERE"></script>
+<!--  Google Maps Plugin
+<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=YOUR_KEY_HERE"></script>-- >
 <!-- Material Dashboard javascript methods -->
 <script src="<?= $scriptdir ?>assets/js/material-dashboard.js?v=1.2.0"></script>
 
-<script src="<?= $scriptdir ?>assets/js/material-dashboard.js?v=1.2.0"></script>
 
 <script src="https://unpkg.com/jspdf@latest/dist/jspdf.min.js"></script>
 <script src=" https://unpkg.com/vexflow/releases/vexflow-min.js"></script>
@@ -29,4 +28,5 @@
 
 <script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
 <script src="https://cdn.datatables.net/1.10.16/js/dataTables.bootstrap4.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/svg.js/2.6.4/svg.min.js"></script>
 

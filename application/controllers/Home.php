@@ -10,7 +10,7 @@ class Home extends CI_Controller {
 
 		$this->load->library('grocery_CRUD');
 
-		$this->load->library('wida_online');
+		$this->load->library('Wida_Online');
 
 		// load Breadcrumbs
 		$this->load->library('breadcrumbs');
@@ -20,7 +20,7 @@ class Home extends CI_Controller {
 
 	public function index()
 	{
-		$wida = new Wida_online();
+		$wida = new Wida_Online();
 
 		$viewScope = array();
 		$viewScope['active'] = "home";
@@ -100,9 +100,9 @@ class Home extends CI_Controller {
 
 	public function song($index)
 	{
-		$wida = new Wida_online();
+		$wida = new Wida_Online();
 		$data = array();
 		$data["selectedsong"] = $wida->getSong($index);
-		$this->load->view('selectedSong', $data);
+		$this->load->view('selectedsong', $data);
 	}
 }

@@ -31,6 +31,30 @@ class Wida_online_model  extends CI_Model  {
 		return $query->row();
 	}
 
+	public function getNewSong()
+	{
+		$data = array(
+			'Title' => '',
+		);
+		$this->db->insert('wida_allsongs',$data);
+		return $this->getSong($this->db->insert_id());
+	}
+
+	public function getChord($spelling)
+	{
+		$this->db->where('spelling', $spelling);
+		$query = $this->db->get('wida_chords');
+		return $query->row();
+	}
+
+	public function getChords()
+	{
+		$list = $this->db->order_by('Name',"Asc")
+			->get('wida_chords')
+			->result();
+		return $list;
+	}
+
 	public function getSongs()
 	{
 		$list = $this->db->order_by('Title',"Asc")

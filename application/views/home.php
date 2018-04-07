@@ -1,6 +1,4 @@
 <div>
-	<a href='<?php echo site_url('examples/songs_management')?>'>Songs</a>
-
 	<div class="row">
 		<div class="col-lg-4 col-md-6 col-sm-12">
 			<div class="card">
@@ -15,7 +13,7 @@
 		<div class="col-lg-4 col-md-6 col-sm-12">
 			<div class="card">
 				<div class="card-header card-header-text" data-background-color="purple">
-					<h4 class="card-title">Opkomende liederen</h4>
+					<h4 class="card-title">Specials</h4>
 				</div>
 				<div class="card-content">
 

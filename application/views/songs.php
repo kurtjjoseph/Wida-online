@@ -5,5 +5,8 @@
 		</div>
 	<?php  }; ?>
 </div>
+<script>
+	var page = "songs";
+</script>
 
 

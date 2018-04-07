@@ -16,11 +16,11 @@
 		<div class="content">
 			<?php echo $content ?>
 		</div>
-		<footer class="footer">
+		<!--footer class="footer">
 			<div class="container-fluid">
 				<?php echo $html_footer ?>
 			</div>
-		</footer>
+		</footer-->
 	</div>
 </div>
 </body>

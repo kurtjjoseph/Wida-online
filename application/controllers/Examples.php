@@ -250,13 +250,18 @@ class Examples extends CI_Controller {
 	public function songs_management()
 	{
 		$crud = new grocery_CRUD();
-
 		$crud->set_table('wida_allsongs');
 		$crud->set_subject('Songs');
-
-
 		$output = $crud->render();
+		$this->_example_output($output);
+	}
 
+	public function playlists_management()
+	{
+		$crud = new grocery_CRUD();
+		$crud->set_table('wida_song_list');
+		$crud->set_subject('Playlists');
+		$output = $crud->render();
 		$this->_example_output($output);
 	}
 

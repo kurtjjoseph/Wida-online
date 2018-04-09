@@ -22,6 +22,7 @@ foreach($css_files as $file): ?>
 		<a href='<?php echo site_url('examples/multigrids')?>'>Multigrid [BETA]</a>|
 		<a href='<?php echo site_url('examples/songs_management')?>'>Songs</a> |
 		<a href='<?php echo site_url('examples/playlists_management')?>'>Playlists</a> |
+
 	</div>
 	<div style='height:20px;'></div>  
     <div>

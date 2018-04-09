@@ -42,6 +42,20 @@ class Wida_Online
 
 	}
 
+	public function getSongs()
+	{
+		$wom = new Wida_online_model();
+		return $wom->getSongs();
+
+	}
+
+	public function saveSong($id, $songdata)
+	{
+		$wom = new Wida_online_model();
+
+		return $wom->saveSong($id,$songdata);
+
+	}
 
 	public function getChord($spelling)
 	{
@@ -57,20 +71,53 @@ class Wida_Online
 
 	}
 
-	public function getSongs()
+//Playlists
+
+
+	public function lastPlaylist()
 	{
 		$wom = new Wida_online_model();
-		return $wom->getSongs();
+		return $wom->get_last_entry_songlist();
 
 	}
 
-	public function saveSong($id, $songdata)
+	public function latestPlaylists()
+	{
+		$wom = new Wida_online_model();
+		return $wom->get_last_ten_entries_songlist();
+
+	}
+
+	public function getPlaylist($id)
+	{
+		$wom = new Wida_online_model();
+		return $wom->getPlaylist($id);
+
+	}
+
+	public function getNewPlaylist()
+	{
+		$wom = new Wida_online_model();
+		return $wom->getNewPlaylist();
+
+	}
+
+	public function getPlaylists()
+	{
+		$wom = new Wida_online_model();
+		return $wom->getPlaylists();
+
+	}
+
+	public function savePlaylist($id, $playlistdata)
 	{
 		$wom = new Wida_online_model();
 
-		return $wom->saveSong($id,$songdata);
+		return $wom->savePlaylist($id,$playlistdata);
 
 	}
+
+
 
 
 	public function loadConfig(){

@@ -186,10 +186,32 @@ foreach ($css_files as $file): ?>
 	$("#fillchords").click(fillChords);
 	$("#updatechords").click(setPreview);
 
+	$("#trans-up").click(transposeUp);
+	$("#trans-down").click(transposeDown);
+	$("#pdfdownload").click(savePDF);
+
 	$("#songtext").val($("#songtext").val().replace(/\t/, "        "));
 	setVideoPreview();
 	setPreview();
 
+	function transposeUp() {
+		$("#transposekey").val((eval($("#transposekey").val()) + 1) % 12);
+		setPreview();
+	}
+
+	function transposeDown() {
+		$("#transposekey").val((eval($("#transposekey").val()) - 1) % 12);
+		setPreview();
+	}
+
+	function savePDF() {
+		var parsedSong = parseSong($("#songtext").val());
+		parsedSong.title = $("#Title").val();
+		parsedSong.key = $("#Key").val();
+		parsedSong.author = $("#Author").val();
+
+		savePdfView(parsedSong);
+	}
 
 	function setPreview() {
 		var parsedSong = parseSong($("#songtext").val());
@@ -201,7 +223,6 @@ foreach ($css_files as $file): ?>
 		setChordInput(parsedSong);
 		pdfView(parsedSong);
 	}
-
 
 	function setVideoPreview() {
 
@@ -237,7 +258,6 @@ foreach ($css_files as $file): ?>
 		);
 
 	}
-
 
 	function fillChords() {
 		var song = parseSong($("#songtext").val());
@@ -328,6 +348,12 @@ foreach ($css_files as $file): ?>
 	function parseSong(input) {
 
 		var song = new Song(input);
+		song.key = $("#Key").val();
+
+		song.setTransposeKey($("#transposekey").val());
+
+		$("#selectedKey").html(song.transposekey);
+
 		song.parseSonglines();
 
 		if ($("#chordinput").html() === '') {
@@ -367,7 +393,6 @@ foreach ($css_files as $file): ?>
 	function pdfView(song) {
 		var pdf = new jsPDF();
 
-
 		song.toPDF(pdf);
 
 		// pdf.setFont("helvetica");
@@ -379,14 +404,24 @@ foreach ($css_files as $file): ?>
 				// var string = pdf.output('datauristring');
 				string = 'http://microsoft.com/thisdoesnotexists';
 				console.error('Sorry, we cannot show live PDFs in MSIE')
-			} else {
+			}else {
 				var string = pdf.output('bloburi');
+				$('.preview-pane').attr('src', string + '#zoom=50');
 			}
-			$('.preview-pane').attr('src', string+'#zoom=50');
-		} catch(e) {
+		} catch (e) {
 			alert('Error ' + e);
 		}
 
+	}
+
+	function savePdfView(song) {
+		var pdf = new jsPDF();
+		song.toPDF(pdf);
+		if (typeof pdf !== 'undefined') try {
+			pdf.save(song.title +" - " + song.transposekey+  '.pdf');
+		} catch (e) {
+			alert('Error ' + e);
+		}
 	}
 
 	function renderChords() {

@@ -2,6 +2,7 @@ function Song(input) {
 	this.title = "";
 	this.text = input;
 	this.key = "";
+	this.transposekey = "";
 	this.tempo = "";
 	this.time = "";
 	this.textlines = [];
@@ -13,6 +14,7 @@ function Song(input) {
 	this.pianoChords = [];
 	this.chordlibrary = {};
 	this.data = [];
+	this.transposeInterval = 0;
 }
 
 
@@ -41,13 +43,70 @@ Song.prototype.setChords = function () {
 	this.chordlibrary = newChordsJson;
 }
 
+Song.prototype.setTransposeKey = function(interval){
+	this.transposeInterval = interval;
+	var intervalname =  Tonal.Interval.fromSemitones(this.transposeInterval);
+	this.transposekey =  Tonal.transpose(this.key,intervalname);
+
+	if(this.transposekey === "D#"){this.transposekey = "Eb";}
+	if(this.transposekey === "G#"){this.transposekey = "Ab";}
+
+
+	this.transposekey
+}
+SongLine.prototype.transposeLine = function(){
+	if(this.type === 'chord'){
+		var noteRegex = "([ABCDEFG])([#b]?)";
+		var songline = this;
+		this.text = this.text.replace(/\|:/gi, '').replace(new RegExp(noteRegex, 'g'),function(match){
+			//console.log(songline.originalkey+":"+match + " " + songline.transposeInterval + " "+ songline.transposekey + ":" +  Tonal.transpose(match, Tonal.Interval.fromSemitones(songline.transposeInterval)));
+
+			var oldkeycenter =  songline.originalkey;
+			var newkeycenter =  songline.transposekey;
+
+			var oldkeynotes = Tonal.Scale.notes(oldkeycenter +" major");
+			var newkeynotes = Tonal.Scale.notes(newkeycenter +" major");
+
+			var currentnote = match;
+
+			var noteInterval = Tonal.Distance.interval(oldkeycenter, currentnote);
+			var transposedNote = Tonal.transpose(newkeycenter, noteInterval);
+
+
+
+			for (var i = 0, len = newkeynotes.length; i < len; i++) {
+				var normalizednote = newkeynotes[i];
+				if(Tonal.Distance.interval(transposedNote, normalizednote) == 0){
+					transposedNote =  normalizednote;
+				}
+				break;
+			}
+
+			if(transposedNote === "Fb"){transposedNote = "E";}
+			if(transposedNote === "Cb"){transposedNote = "B";}
+			if(transposedNote === "B#"){transposedNote = "C";}
+			if(transposedNote === "E#"){transposedNote = "F";}
+
+			console.log(Tonal.Scale.notes(oldkeycenter +" major") + "  " + currentnote + "->" + transposedNote + Tonal.Scale.notes(newkeycenter +" major"));
+
+
+			return  transposedNote;
+		});
+
+	}
+
+}
+
+
+
+
 Song.prototype.toPDF = function (pdf) {
 	var cursor = new Cursor();
 	//console.log("song: " + this);
 
 	pdf.setFont("helvetica");
 	pdf.setFontType("bold");
-	pdf.text(cursor.marginleft, cursor.toppos(), this.title + " - " + this.key);
+	pdf.text(cursor.marginleft, cursor.toppos(), this.title + " - " + this.transposekey);
 	cursor.currentline++;
 
 	pdf.setFontSize(10);
@@ -302,189 +361,18 @@ Song.prototype.parseSonglines = function () {
 	for (var i = 0, len = this.textlines.length; i < len; i++) {
 		parseBuffer++;
 		var currentsongline = new SongLine(this.textlines[i]);
+
+		currentsongline.transposeInterval = this.transposeInterval;
+		currentsongline.originalkey = this.key;
+		currentsongline.transposekey = this.transposekey;
+
 		currentsongline.parseText();
 		songSection.songlines.push(currentsongline);
 		if (currentsongline.type === "empty") {
 			this.songsections.push(songSection);
 			songSection = new SongSection();
-
 		}
-
-
-		// history.push(currentsongline.type);
-		//
-		//
-		// if (i == 2) {
-		// 	if (history[i - 2] === "text") {
-		// 		if (history[i - 1] === "empty") {
-		// 			history[i - 2] = "title";
-		// 			this.songlines[i - 2].type = "title";
-		// 			this.title = this.songlines[i - 2].text;
-		// 		}
-		// 	}
-		// }
-		//
-		// if (parseBuffer == 1) {
-		// 	if (currentsongline.type === "segment-title") {
-		// 		if (history[i - 1] === "text") {
-		// 			var songline = new SongLine();
-		// 			songline.lyricText = this.songlines[i - 1];
-		// 			songSection.songlines.push(songline);
-		// 		}
-		// 		if (history[i - 1] === "chord") {
-		// 			var songline = new SongLine();
-		// 			songline.chordText = this.songlines[i - 1];
-		// 			songSection.songlines.push(songline);
-		// 		}
-		// 		if (history[i - 1] === "segment-title") {
-		// 			this.songsections.push(songSection);
-		// 			songSection = new SongSection();
-		// 		}
-		//
-		//
-		// 		songSection.title = currentsongline.text;
-		// 		parseBuffer = 0;
-		// 	}
-		//
-		// 	if (currentsongline.type === "empty") {
-		// 		var songline = new SongLine();
-		// 		songline.emptyline = true;
-		// 		songline.lyricText = currentsongline.text;
-		// 		songSection.songlines.push(songline);
-		// 		this.songsections.push(songSection);
-		// 		songSection = new SongSection();
-		// 		parseBuffer = 0;
-		// 	}
-		// }
-		//
-		// if (parseBuffer == 2) {
-		// 	if (history[i - 1] === "chord") {
-		// 		//Chord - Lyric
-		// 		if (history[i] === "text") {
-		// 			var songline = new SongLine();
-		// 			songline.chordText = this.songlines[i - 1];
-		// 			songline.lyricText = this.songlines[i];
-		// 			songSection.songlines.push(songline);
-		//
-		// 			parseBuffer = 0;
-		// 		}
-		// 		// Chord - Chord
-		// 		if (history[i] === "chord") {
-		// 			var songline = new SongLine();
-		// 			songline.chordText = this.songlines[i - 1];
-		// 			songSection.songlines.push(songline);
-		//
-		// 			parseBuffer = 1;
-		// 		}
-		//
-		// 		// Chord - Empty
-		// 		if (history[i] === "empty") {
-		// 			var songline = new SongLine();
-		// 			songline.chordText = this.songlines[i - 1];
-		// 			songline.lyricText = this.songlines[i];
-		// 			songSection.songlines.push(songline);
-		//
-		// 			this.songsections.push(songSection);
-		// 			songSection = new SongSection();
-		//
-		// 			parseBuffer = 0;
-		// 		}
-		// 	}
-		//
-		//
-		// 	if (history[i - 1] === "text") {
-		//
-		// 		//Lyric - Lyric
-		// 		if (history[i] === "text") {
-		// 			var songline = new SongLine();
-		// 			songline.lyricText = this.songlines[i - 1];
-		// 			songSection.songlines.push(songline);
-		//
-		// 			songline = new SongLine();
-		// 			songline.lyricText = this.songlines[i];
-		// 			songSection.songlines.push(songline);
-		// 			parseBuffer = 0;
-		// 		}
-		// 		// Lyric - Chord
-		// 		if (history[i] === "chord") {
-		// 			var songline = new SongLine();
-		// 			songline.chordText = this.songlines[i - 1];
-		// 			songSection.songlines.push(songline);
-		//
-		// 			parseBuffer = 1;
-		// 		}
-		//
-		// 		// Lyric - Empty
-		// 		if (history[i] === "empty") {
-		// 			var songline = new SongLine();
-		// 			songline.chordText = this.songlines[i - 1];
-		// 			songline.lyricText = this.songlines[i];
-		// 			songSection.songlines.push(songline);
-		//
-		// 			parseBuffer = 0;
-		// 		}
-		//
-		//
-		// 	}
-		//
-		// 	if (history[i - 1] === "segment-title") {
-		//
-		// 		// Segment-title - Chord
-		// 		if (history[i] === "chord") {
-		// 			var songline = new SongLine();
-		// 			songline.chordText = this.songlines[i - 1];
-		// 			songSection.songlines.push(songline);
-		//
-		// 			parseBuffer = 0;
-		// 		}
-		// 		// Segment-title - Chord
-		// 		if (history[i] === "text") {
-		// 			var songline = new SongLine();
-		// 			songline.lyricText = this.songlines[i - 1];
-		// 			songSection.songlines.push(songline);
-		//
-		// 			parseBuffer = 0;
-		// 		}
-		// 		// Segment-title - Empty
-		// 		if (history[i] === "empty") {
-		// 			var songline = new SongLine();
-		// 			songline.emptyline = true;
-		// 			songSection.songlines.push(songline);
-		//
-		// 			parseBuffer = 0;
-		// 		}
-		// 	}
-		//
-		//
-		// }
-
 	}
-	// if (parseBuffer == 0) {
-	// 	this.songsections.push(songSection);
-	// }
-	// if (parseBuffer == 1) {
-	// 	if (history[i] === "text") {
-	// 		var songline = new SongLine();
-	// 		songline.lyricText = this.songlines[i];
-	// 		songSection.songlines.push(songline);
-	// 	}
-	// 	if (history[i] === "chord") {
-	// 		var songline = new SongLine();
-	// 		songline.chordText = this.songlines[i];
-	// 		songSection.songlines.push(songline);
-	// 	}
-	//
-	// 	if (history[i] === "segment-title") {
-	// 		this.songsections.push(songSection);
-	// 		songSection = new SongSection();
-	// 		songSection.title = songline.text;
-	// 		var songline = new SongLine();
-	// 		songline.chordText = this.songlines[i - 1];
-	// 		songSection.songlines.push(songline);
-	// 	}
-	//
-	// 	this.songsections.push(songSection);
-	// }
 
 	//console.log("History: " + history);
 	//console.log(this.songsections);
@@ -515,6 +403,10 @@ function SongLine(input) {
 	this.notes = [];
 	this.chords = [];
 	this.emptyline = false;
+
+	this.transposeInterval = 0;
+	this.originalkey = "";
+	this.transposekey = "";
 }
 
 
@@ -522,6 +414,9 @@ SongLine.prototype.parseText = function () {
 	this.segments = this.text.replace(/\t/, "        ").split(/\s/gi);
 	//console.log(this.segments);
 	this.setType();
+
+	this.transposeLine();
+
 }
 
 SongLine.prototype.setType = function () {

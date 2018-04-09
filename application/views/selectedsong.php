@@ -4,17 +4,21 @@
 			<table width="100%">
 				<tr>
 					<td>
-						<h4 class="card-title "><?= $selectedsong->Title ?></h4>
+						<h4 class="card-title "><?= $selectedsong->Title ?> - <span id="selectedKey"><?= $selectedsong->Key ?></span></h4>
 					</td>
 					<td class="text-right">
-						<button id="trans-up" class="btn btn-purple btn-round btn-sm" type="button" title="Transpose up" rel="tooltip" data-original-title="Transpose up">
-							<i class="fa fa-fw fa-hashtag"></i>
-						</button>
 						<button id="trans-down" class="btn btn-purple btn-round btn-sm" type="button" title="Transpose down" rel="tooltip" data-original-title="Transpose down">
 							<i class="fa fa-fw"><img style="height:19px; position:relative; top:-2px;" src="/wida-online/assets/common/img/b.png"></i>
 						</button>
+						<button id="trans-up" class="btn btn-purple btn-round btn-sm" type="button" title="Transpose up" rel="tooltip" data-original-title="Transpose up">
+							<i class="fa fa-fw fa-hashtag"></i>
+						</button>
+						<button id="pdfdownload" class="btn btn-purple btn-round btn-sm" type="button" title="Download pdf" rel="tooltip" data-original-title="Download pdf">
+							<i class="fa fa-fw fa-file-pdf-o"></i>
+						</button>
+
 						<a  href="<?php echo site_url('/') ?>songs/edit/<?= $selectedsong->id; ?>">
-						<button id="trans-down" class="btn btn-purple btn-round btn-sm" type="button" title="Edit song" rel="tooltip" data-original-title="Edit Song">
+						<button id="editsong" class="btn btn-purple btn-round btn-sm" type="button" title="Edit song" rel="tooltip" data-original-title="Edit Song">
 							<i class="fa fa-fw fa-edit"></i>
 						</button>
 						</a>
@@ -25,6 +29,8 @@
 		</div>
 		<div class="card-content">
 			<div class="row">
+				<input type="hidden" id="transposekey" value="0">
+				<input type="hidden" id="Title" value="<?= $selectedsong->Title ?>">
 				<input type="hidden" id="songtext" value="<?= $selectedsong->Text ?>">
 				<input type="hidden" id="Author" value="<?= $selectedsong->Author ?>">
 				<input type="hidden" id="Key" value="<?= $selectedsong->Key ?>">

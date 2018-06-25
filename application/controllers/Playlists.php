@@ -50,7 +50,6 @@ class Playlists extends CI_Controller
 		$this->load->view($wida->config['bootstrap'], $viewScope);
 	}
 
-
 	public function render_content($viewScope)
 	{
 		$output = array();
@@ -72,7 +71,7 @@ class Playlists extends CI_Controller
 		$this->breadcrumbs = new Breadcrumbs();
 
 		// add breadcrumbs
-		$this->breadcrumbs->push('Liederen', '/playlists');
+		$this->breadcrumbs->push('Playlists', '/playlists');
 
 
 		// output
@@ -96,11 +95,10 @@ class Playlists extends CI_Controller
 		$data = array();
 		$data["selectedplaylist"] = $wida->getplaylist($index);
 		$viewScope['content'] = $this->load->view('selectedplaylist', $data, true);
-		$viewScope['pagetitle'] = "Liederen";
+
+		$viewScope['pagetitle'] = "Playlists";
 		$viewScope['pagelink'] = "/playlists";
 		$viewScope['pageaddlink'] = "/playlists/add";
-
-
 		$viewScope["css_files"] = array();
 		$viewScope["js_files"] = array();
 		$viewScope["js_files"][] = "/wida-online/assets/common/js/views/playlistView.js";
@@ -108,34 +106,44 @@ class Playlists extends CI_Controller
 		$this->breadcrumbs = new Breadcrumbs();
 
 		// add breadcrumbs
-		$this->breadcrumbs->push('Liederen', '/playlists');
-		$this->breadcrumbs->push($data['selectedplaylist']->Title, '/playlist');
+		$this->breadcrumbs->push('Playlists', '/playlists');
+		$this->breadcrumbs->push($data['selectedplaylist']->title, '/playlist');
 		// output
 		$viewScope["breadcrumbdata"]["output"] = $this->breadcrumbs->show();
 
 		$this->render($viewScope);
 	}
 
-
 	public function save($index)
 	{
 		$viewScope = array();
 		$wida = new Wida_Online();
 
+		//(`id`, `title`, `userID`, `dateUpdated`, `dateScheduled`, `listtext`, `description`, `eventId`)
+
+		$array = $this->input->post("playlistsongs");
+		$newArray = array();
+		if(!empty($array)){
+
+			foreach (array_keys($array) as $fieldKey) {
+				foreach ($array[$fieldKey] as $key => $value) {
+					$newArray[$key][$fieldKey] = $value;
+				}
+			}
+
+
+		}
+		print_r($array);
+		print_r($newArray);
 		$playlistdata = array(
 
-			'Title' => $this->input->post('Title'),
-			'Author' => $this->input->post('Author'),
-			'Key' => $this->input->post('Key'),
-			'Tempo' => $this->input->post('Tempo'),
-			'Time' => $this->input->post('Time'),
-			'YoutubeLink' => $this->input->post('YoutubeLink'),
-			'drumcover' => $this->input->post('drumcover'),
-			'basscover' => $this->input->post('basscover'),
-			'zangcover' => $this->input->post('zangcover'),
-			'pianocover' => $this->input->post('pianocover'),
-			'elguitarcover' => $this->input->post('elguitarcover'),
-			'acguitarcover' => $this->input->post('acguitarcover'),
+			'title' => $this->input->post('title'),
+			'userID' => $this->input->post('userID'),
+			'dateScheduled' => $this->input->post('dateScheduled'),
+			'listtext' => $this->input->post('listtext'),
+			'description' => $this->input->post('description'),
+			'eventId' => $this->input->post('eventId'),
+			'songIds' => json_encode ($newArray),
 			'Data' => $this->input->post('Data'),
 			'Text' => $this->input->post('Text')
 		);
@@ -143,23 +151,28 @@ class Playlists extends CI_Controller
 		$data["selectedplaylist"] = $wida->saveplaylist($index, $playlistdata);
 		$viewScope['savedplaylist'] = true;
 
-		$viewScope['content'] = $this->load->view('editplaylist', $data, true);
-		$viewScope['pagetitle'] = "Liederen";
-		$viewScope['pagelink'] = "/playlists";
-		$viewScope['pageaddlink'] = "/playlists/add";
-		$viewScope["css_files"] = array();
-		$viewScope["js_files"] = array();
-		$viewScope["js_files"][] = "/wida-online/assets/common/js/views/playlistView.js";
+//		$viewScope['content'] = $this->load->view('editplaylist', $data, true);
+//		$viewScope['pagetitle'] = "Playlists";
+//		$viewScope['pagelink'] = "/playlists";
+//		$viewScope['pageaddlink'] = "/playlists/add";
+//		$viewScope["css_files"] = array();
+//		$viewScope["js_files"] = array();
+//		$viewScope["js_files"][] = "/wida-online/assets/common/js/views/playlistsView.js";
+//
+//		$this->breadcrumbs = new Breadcrumbs();
+//
+//		$data["songlist"] = $wida->getSongs(false);
+//		$data["userlist"] = $wida->getUsers(false);
+//
+//		// add breadcrumbs
+//		$this->breadcrumbs->push('Playlists', '/playlists');
+//		$this->breadcrumbs->push($data['selectedplaylist']->title, '/playlist');
+//		// output
+//		$viewScope["breadcrumbdata"]["output"] = $this->breadcrumbs->show();
+//
+//		$this->render($viewScope);
 
-		$this->breadcrumbs = new Breadcrumbs();
-
-		// add breadcrumbs
-		$this->breadcrumbs->push('Liederen', '/playlists');
-		$this->breadcrumbs->push($data['selectedplaylist']->Title, '/playlist');
-		// output
-		$viewScope["breadcrumbdata"]["output"] = $this->breadcrumbs->show();
-
-		$this->render($viewScope);
+		$this->edit($index);
 
 	}
 
@@ -168,25 +181,29 @@ class Playlists extends CI_Controller
 		$viewScope = array();
 		$wida = new Wida_Online();
 		$data = array();
+		$data["songlist"] = $wida->getSongs(false);
+		$data["userlist"] = $wida->getUsers(false);
+
 		$data["selectedplaylist"] = $wida->getplaylist($index);
+		print_r($data["selectedplaylist"]);
+
 		$viewScope['content'] = $this->load->view('editplaylist', $data, true);
-		$viewScope['pagetitle'] = "Liederen";
+		$viewScope['pagetitle'] = "Playlists";
 		$viewScope['pagelink'] = "/playlists";
 		$viewScope['pageaddlink'] = "/playlists/add";
 		$viewScope["css_files"] = array();
 		$viewScope["js_files"] = array();
-		$viewScope["js_files"][] = "/wida-online/assets/common/js/views/playlistView.js";
+		$viewScope["js_files"][] = "/wida-online/assets/common/js/views/editplaylistView.js";
 		$this->breadcrumbs = new Breadcrumbs();
 
 		// add breadcrumbs
-		$this->breadcrumbs->push('Liederen', '/playlists');
-		$this->breadcrumbs->push($data['selectedplaylist']->Title, '/playlist');
+		$this->breadcrumbs->push('Playlists', '/playlists');
+		$this->breadcrumbs->push($data['selectedplaylist']->title, '/playlist');
 		// output
 		$viewScope["breadcrumbdata"]["output"] = $this->breadcrumbs->show();
 
 		$this->render($viewScope);
 	}
-
 
 	public function add()
 	{
@@ -200,17 +217,17 @@ class Playlists extends CI_Controller
 		//Viewtemplate
 		$viewScope['content'] = $this->load->view('editplaylist', $data, true);
 
-		$viewScope['pagetitle'] = "Liederen";
+		$viewScope['pagetitle'] = "Playlists";
 		$viewScope['pagelink'] = "/playlists";
 		$viewScope['pageaddlink'] = "/playlists/add";
 		$viewScope["css_files"] = array();
 		$viewScope["js_files"] = array();
-		$viewScope["js_files"][] = "/wida-online/assets/common/js/views/playlistView.js";
+		$viewScope["js_files"][] = "/wida-online/assets/common/js/views/addplaylistView.js";
 		$this->breadcrumbs = new Breadcrumbs();
 
 		// add breadcrumbs
-		$this->breadcrumbs->push('Liederen', '/playlists');
-		$this->breadcrumbs->push($data['selectedplaylist']->Title, '/playlist');
+		$this->breadcrumbs->push('Playlists', '/playlists');
+		$this->breadcrumbs->push($data['selectedplaylist']->title, '/playlist');
 		// output
 		$viewScope["breadcrumbdata"]["output"] = $this->breadcrumbs->show();
 
@@ -221,11 +238,8 @@ class Playlists extends CI_Controller
 	{
 		$wida = new Wida_Online();
 
-
 		$viewScope['breadcrumbdata'] = $this->render_breadcrumb($viewScope);
 		$viewScope['breadcrumb'] = $this->load->view($wida->config['breadcrumb'], $viewScope, true);
-
-
 		$viewScope['js_files'] =  $wida->config['js_files'] + $viewScope['js_files'];
 		$viewScope['css_files'] =  $wida->config['css_files'] + $viewScope['css_files'];
 		$viewScope['scriptdir'] = $wida->config['scriptdir'];

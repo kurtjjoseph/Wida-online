@@ -180,7 +180,7 @@ class Songs extends CI_Controller
 		$viewScope['pageaddlink'] = "/songs/add";
 		$viewScope["css_files"] = array();
 		$viewScope["js_files"] = array();
-		$viewScope["js_files"][] = "/wida-online/assets/common/js/views/songView.js";
+		$viewScope["js_files"][] = "/wida-online/assets/common/js/views/editsongView.js";
 		$this->breadcrumbs = new Breadcrumbs();
 
 		// add breadcrumbs
@@ -253,7 +253,7 @@ class Songs extends CI_Controller
 	{
 		$wida = new Wida_Online();
 		$data = array();
-		$data["songs"] = $wida->getSongs();
+		$data["songs"] = $wida->getSongs(true);
 		return $this->load->view('songlist', $data, true);
 	}
 }

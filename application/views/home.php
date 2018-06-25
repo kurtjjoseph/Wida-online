@@ -5,7 +5,7 @@
 				<div class="card-header card-header-text" data-background-color="purple">
 					<h4 class="card-title">Volgende Dienst</h4>
 				</div>
-				<div class="card-content">
+				<div id="nextservice" class="card-content">
 
 				</div>
 			</div>

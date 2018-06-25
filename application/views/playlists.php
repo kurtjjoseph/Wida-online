@@ -19,12 +19,12 @@
 	<?php foreach ($playlists as $id => $playlist) { ?>
 		<tr onclick="location.href='playlists/playlist/<?= $playlist->id; ?>';">
 			<td>
-				<span class="title"><?= $playlist->Title; ?></span>
-				<span class="author"><?= $playlist->UserID; ?></span>
-				<span class="author"><?= $playlist->DateUpdated; ?></span>
-				<input type="hidden" value="<?php echo $playlist->Listtext?>">
+				<span class="title"><?= $playlist->title; ?></span>
+				<span class="author"><?= $playlist->userID; ?></span>
+				<span class="author"><?= $playlist->dateUpdated; ?></span>
+				<input type="hidden" value="<?php echo $playlist->listtext?>">
 			</td>
-			<td><?= $playlist->DateUpdated; ?></td>
+			<td><?= $playlist->dateUpdated; ?></td>
 			<td><a href="playlists/edit/<?= $playlist->id; ?>"><i class="fa fa-fw fa-edit"></i></a></td>
 			</a>
 		</tr>

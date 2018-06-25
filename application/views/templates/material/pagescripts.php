@@ -5,6 +5,8 @@ foreach ($css_files as $file): ?>
 
 
 <style>
+	@import "compass/css3";
+
 	.boxsizingBorder {
 		-webkit-box-sizing: border-box;
 		-moz-box-sizing: border-box;
@@ -121,10 +123,184 @@ foreach ($css_files as $file): ?>
 		overflow: hidden;
 	}
 
+	.btn-group.open > .btn-default {
+		background-color: #fff !important;
+	}
+
+	.btn-group > .btn-default {
+		background-color: #fff !important;
+		color: #000 !important;
+	}
+
+	#userid {
+		margin-top: 10px;
+	}
+
+	#songinsertcontainer * {
+		width: 359px;
+		margin-top: 3px;
+	}
+
+	.typeahead,
+	.tt-query,
+	.tt-hint {
+		
+		height: 30px;
+		padding: 8px 12px;
+		line-height: 30px;
+
+		outline: none;
+	}
+
+	.typeahead {
+		background-color: #fff;
+	}
+
+	.typeahead:focus {
+	}
+
+	.songsearch, .songkey, .songlistrow {
+
+
+		font-weight: bold;
+		font-size: 20px;
+
+		border:0px;
+		border-bottom:1px;
+	}
+	.songkey {
+
+		width: 50px;
+		font-weight: bold;
+		font-size: 20px;
+		padding:10px;
+		border:0px;
+	}
+
+	.songlistrow:hover{
+			 background: #ccc;
+		 }
+	.songlistrow{
+		background: #eee;
+	}
+	.tt-query {
+		-webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+		-moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+		box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+	}
+
+	.tt-hint {
+		color: #999
+	}
+
+	.tt-menu {
+		width: 422px;
+		margin: 12px 0;
+		padding: 8px 0;
+		background-color: #fff;
+		border: 1px solid #ccc;
+		border: 1px solid rgba(0, 0, 0, 0.2);
+		-webkit-border-radius: 3px;
+		-moz-border-radius: 3px;
+		border-radius: 3px;
+		-webkit-box-shadow: 0 5px 10px rgba(0, 0, 0, .2);
+		-moz-box-shadow: 0 5px 10px rgba(0, 0, 0, .2);
+		box-shadow: 0 5px 10px rgba(0, 0, 0, .2);
+
+		max-height: 150px;
+		overflow-y: auto;
+		overflow-x: hidden;
+	}
+
+	.tt-suggestion {
+		padding: 3px 20px;
+	}
+
+	.tt-suggestion:hover {
+		cursor: pointer;
+		color: #fff;
+		background-color: #9c27b0;
+	}
+
+	.tt-suggestion.tt-cursor {
+		color: #fff;
+		background-color: #9c27b0;
+
+	}
+
+	.tt-suggestion p {
+		margin: 0;
+	}
+
+	.gist {
+		font-size: 14px;
+	}
+
+	.table-sortable {
+		position: relative;
+	}
+
+	.table-sortable .sortable-placeholder {
+		height: 37px;
+	}
+
+	.table-sortable .sortable-placeholder:after {
+		position: absolute;
+		z-index: 10;
+		content: " ";
+		height: 37px;
+		background: #f9f9f9;
+		left: 0;
+		right: 0;
+	}
+
+	.table-editable {
+		position: relative;
+
+	.glyphicon {
+		font-size: 20px;
+	}
+
+	}
+
+	.table-remove {
+		color: #700;
+		cursor: pointer;
+
+	&
+	:hover {
+		color: #f00;
+	}
+
+	}
+
+	.table-up, .table-down {
+		color: #007;
+		cursor: pointer;
+
+	&
+	:hover {
+		color: #00f;
+	}
+
+	}
+
+	.table-add {
+		color: #070;
+		cursor: pointer;
+
+	&
+	:hover {
+		color: #0b0;
+	}
+
+	}
+
 </style>
 
 
 <script type="text/javascript">
+
 	function filter() {
 		var songs = document.getElementById("songs");
 		songs.classList.remove("table-striped");
@@ -178,21 +354,6 @@ foreach ($css_files as $file): ?>
 
 		}
 	}
-
-	// Edit song form logic
-	$("#youtubelink").change(setVideoPreview);
-	$("#songtext").on('input', setPreview);
-	$("#chordinput").on('input', setPreview);
-	$("#fillchords").click(fillChords);
-	$("#updatechords").click(setPreview);
-
-	$("#trans-up").click(transposeUp);
-	$("#trans-down").click(transposeDown);
-	$("#pdfdownload").click(savePDF);
-
-	$("#songtext").val($("#songtext").val().replace(/\t/, "        "));
-	setVideoPreview();
-	setPreview();
 
 	function transposeUp() {
 		$("#transposekey").val((eval($("#transposekey").val()) + 1) % 12);
@@ -404,7 +565,7 @@ foreach ($css_files as $file): ?>
 				// var string = pdf.output('datauristring');
 				string = 'http://microsoft.com/thisdoesnotexists';
 				console.error('Sorry, we cannot show live PDFs in MSIE')
-			}else {
+			} else {
 				var string = pdf.output('bloburi');
 				$('.preview-pane').attr('src', string + '#zoom=50');
 			}
@@ -418,7 +579,7 @@ foreach ($css_files as $file): ?>
 		var pdf = new jsPDF();
 		song.toPDF(pdf);
 		if (typeof pdf !== 'undefined') try {
-			pdf.save(song.title +" - " + song.transposekey+  '.pdf');
+			pdf.save(song.title + " - " + song.transposekey + '.pdf');
 		} catch (e) {
 			alert('Error ' + e);
 		}
@@ -443,7 +604,8 @@ foreach ($css_files as $file): ?>
 	}
 
 </script>
-test
+
+
 <?php foreach ($js_files as $file): ?>
 	<script src="<?php echo $file; ?>"></script>
 <?php endforeach; ?>

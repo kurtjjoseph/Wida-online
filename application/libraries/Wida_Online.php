@@ -14,6 +14,18 @@ class Wida_Online
 		$this->loadConfig();
 	}
 
+	public function getNextService()
+	{
+		$wom = new Wida_online_model();
+		$event =  $wom->get_last_entry_event();
+
+		$event->bezetting = $wom->getBezetting($event->bezettingID);
+		$event->dresscode = $wom->getDresscode($event->dresscodeID);
+		$event->songlist = $wom->getPlaylist($event->songlistID);
+
+		return $event;
+	}
+
 	public function lastSong()
 	{
 		$wom = new Wida_online_model();
@@ -42,10 +54,17 @@ class Wida_Online
 
 	}
 
-	public function getSongs()
+	public function getSongs($full = false)
 	{
 		$wom = new Wida_online_model();
-		return $wom->getSongs();
+		$songset =  $wom->getSongs($full);
+		$songlist = array();
+
+		foreach ($songset as $song) {
+			$songlist[$song->id]= $song;
+		}
+
+		return $songlist;
 
 	}
 
@@ -91,8 +110,16 @@ class Wida_Online
 	public function getPlaylist($id)
 	{
 		$wom = new Wida_online_model();
-		return $wom->getPlaylist($id);
 
+		$playlist  =  $wom->getPlaylist($id);
+
+		if(isset($playlist->songIds)){
+			$playlist->playlistsongs  = json_decode($playlist->songIds);
+
+
+		}
+
+		return $playlist;
 	}
 
 	public function getNewPlaylist()
@@ -118,6 +145,12 @@ class Wida_Online
 	}
 
 
+	public function getUsers($full = false)
+	{
+		$wom = new Wida_online_model();
+		return $wom->getUsers($full);
+
+	}
 
 
 	public function loadConfig(){

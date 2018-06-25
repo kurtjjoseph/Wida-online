@@ -33,7 +33,7 @@ Cursor.prototype.toppos = function () {
 
 Cursor.prototype.pagebreak = function (lines) {
 
-	console.log(this.margintop + (this.lineheight * (this.currentline + 1)));
+	//console.log(this.margintop + (this.lineheight * (this.currentline + 1)));
 	return this.margintop + (this.lineheight * (this.currentline + lines)) >= this.pageheight;
 }
 
@@ -87,7 +87,7 @@ SongLine.prototype.transposeLine = function(){
 			if(transposedNote === "B#"){transposedNote = "C";}
 			if(transposedNote === "E#"){transposedNote = "F";}
 
-			console.log(Tonal.Scale.notes(oldkeycenter +" major") + "  " + currentnote + "->" + transposedNote + Tonal.Scale.notes(newkeycenter +" major"));
+			//console.log(Tonal.Scale.notes(oldkeycenter +" major") + "  " + currentnote + "->" + transposedNote + Tonal.Scale.notes(newkeycenter +" major"));
 
 
 			return  transposedNote;
@@ -102,7 +102,7 @@ SongLine.prototype.transposeLine = function(){
 
 Song.prototype.toPDF = function (pdf) {
 	var cursor = new Cursor();
-	//console.log("song: " + this);
+	////console.log("song: " + this);
 
 	pdf.setFont("helvetica");
 	pdf.setFontType("bold");
@@ -171,7 +171,7 @@ SongLine.prototype.toPDF = function (pdf, cursor) {
 
 
 Song.prototype.getHtmlView = function () {
-	//console.log("song: " + this);
+	////console.log("song: " + this);
 	var html = "";
 	for (var i = 0, len = this.songsections.length; i < len; i++) {
 		var section = this.songsections[i];
@@ -213,32 +213,6 @@ SongLine.prototype.parseHTML = function () {
 		);
 
 		html += replacement;
-
-		// for (var i = 0, len = this.segments.length; i < len; i++) {
-		// 	var segment = this.segments[i];
-		// 	var trim = segment.match(/\b/);
-		// 	var spaces = "";
-		// 	if (trim) {
-		// 		spaces = segment.substring(0, trim.index);
-		// 	}
-        //
-        //
-		// 	if (segment.trim() !== '' && segment.trim().match(chordRegex)) {
-        //
-		// 		var replacement = segment.replace(chordRegex,
-		// 			"<span class='chord ' rel='tooltip' data-original-title='" + "\\$&" + "'>" + "\\$&" + "</span>"
-		// 		);
-        //
-		// 		html += replacement;
-		// 		//html += spaces + segment.substring(0, trim) + "<span class='chord ' rel='tooltip' data-original-title='" + segment + "'>" + segment.trim() + "</span>";
-		// 	} else {
-		// 		html += " ";
-		// 	}
-		// }
-
-
-
-
 		html += "\r\n";
 	}
 	else {
@@ -342,7 +316,7 @@ Song.prototype.formatChordLibrary = function (chordlibrary) {
 	}
 	html += "}]" + "\r\n";
 
-	//console.log(this.chordlibrary);
+	////console.log(this.chordlibrary);
 	return html;
 }
 
@@ -351,7 +325,7 @@ Song.prototype.parseSonglines = function () {
 	//Get lines
 	Array.prototype.push.apply(this.textlines, this.text.split(/[\r\n]/));
 
-	//console.log(this.textlines);
+	////console.log(this.textlines);
 	var prevLine = "";
 	var history = [];
 
@@ -374,8 +348,8 @@ Song.prototype.parseSonglines = function () {
 		}
 	}
 
-	//console.log("History: " + history);
-	//console.log(this.songsections);
+	////console.log("History: " + history);
+	////console.log(this.songsections);
 
 
 	if (songSection.songlines.length !== 0) {
@@ -390,7 +364,6 @@ function SongSection() {
 	this.notes = [];
 	this.chords = [];
 }
-
 
 function SongLine(input) {
 
@@ -409,10 +382,9 @@ function SongLine(input) {
 	this.transposekey = "";
 }
 
-
 SongLine.prototype.parseText = function () {
 	this.segments = this.text.replace(/\t/, "        ").split(/\s/gi);
-	//console.log(this.segments);
+	////console.log(this.segments);
 	this.setType();
 
 	this.transposeLine();
@@ -421,17 +393,17 @@ SongLine.prototype.parseText = function () {
 
 SongLine.prototype.setType = function () {
 	if (this.isEmptyLine(this.text)) this.type = "empty";
-	else if (this.isChordLine(this.text)) this.type = "chord";
 	else if (this.isSegmentTitleLine(this.text)) this.type = "segment-title";
+	else if (this.isChordLine(this.text)) this.type = "chord";
 	else this.type = "text";
-	//console.log(this.type + ": " + this.text);
+	////console.log(this.type + ": " + this.text);
 }
 
 SongLine.prototype.parseChords = function (input) {
 	var chordRegex = "[ABCDEFG][#b]?(minmaj|min|maj|dim|°|mi|m|M|aug|sus)?[+246/9713]*[ABCDEFG]?[#b]?";
 
 	var chords = input.trim().match(chordRegex);
-	//console.log(chords);
+	////console.log(chords);
 	return chords;
 }
 
@@ -448,11 +420,13 @@ SongLine.prototype.isTextLine = function (input) {
 
 SongLine.prototype.isSegmentTitleLine = function (input) {
 	if (input == null) return false;
-	var matches = input.match(/[:\[\]]/);
+	var matches = input.match(/(:|\[|\])/);
+	var matcheswl = input.match(/(Chorus|Verse|Refrein|Bridge|Break|Intro|Outtro|Couplet|Instrumental)/);
 	var regex = /\s+/gi;
 	var wordCount = input.trim().replace(regex, ' ').split(' ').length;
-	if (matches == null && wordCount >= 2) return false;
-	return true;
+	if (matches != null ) return true;
+	if (matcheswl != null ) return true;
+	return false;
 }
 
 SongLine.prototype.isChordLine = function (input) {

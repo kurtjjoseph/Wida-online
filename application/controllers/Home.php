@@ -41,6 +41,8 @@ class Home extends CI_Controller {
 
 
 		$viewScope['js_files'] = $wida->config['js_files'] ;
+
+		$viewScope["js_files"][] = "/wida-online/assets/common/js/views/homeView.js";
 		$viewScope['css_files'] = $wida->config['css_files'] ;
 		$viewScope['pagetitle'] = "Overzicht";
 
@@ -104,5 +106,13 @@ class Home extends CI_Controller {
 		$data = array();
 		$data["selectedsong"] = $wida->getSong($index);
 		$this->load->view('selectedsong', $data);
+	}
+
+	public function nextService(){
+		$wida = new Wida_Online();
+		$data = array();
+		$data["nextservice"] = $wida->getNextService();
+		$data["event"] = $wida->getNextService();
+		$this->load->view('nextservice', $data);
 	}
 }

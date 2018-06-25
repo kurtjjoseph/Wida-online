@@ -40,13 +40,19 @@ class Wida_online_model  extends CI_Model  {
 		return $this->getSong($this->db->insert_id());
 	}
 
-	public function getSongs()
+	public function getSongs($full = false)
 	{
-		$list = $this->db->order_by('Title',"Asc")
-			->select("`id`, `Title`,`Tempo`, `Time`,`Text`, `Key`, `Author`, `YoutubeLink`")
-			->get('wida_allsongs')
-			->result();
-		return $list;
+		if($full){
+			return $this->db->order_by('Title',"Asc")
+				->select("`id`, `Title`,`Tempo`, `Time`,`Text`, `Key`, `Author`, `YoutubeLink`")
+				->get('wida_allsongs')
+				->result();
+		}else{
+			return $this->db->order_by('Title',"Asc")
+				->select("`id`, `Title`, `Key`, `Text`,`Author`")
+				->get('wida_allsongs')
+				->result();
+		}
 	}
 
 
@@ -95,7 +101,7 @@ class Wida_online_model  extends CI_Model  {
 	public function getPlaylists()
 	{
 		$list = $this->db->order_by('Title',"Asc")
-			->select("`id`, `Title`,`Listtext`, `UserID`, `DateUpdated`, `DateScheduled`")
+			->select("`id`, `title`,`listtext`, `userID`, `dateUpdated`, `dateScheduled`")
 			->get('wida_song_list')
 			->result();
 		return $list;
@@ -129,5 +135,51 @@ class Wida_online_model  extends CI_Model  {
 		return $list;
 	}
 
+
+	public function getUsers($full = false)
+	{
+
+		if($full){
+			return $this->db->order_by('Title',"Asc")
+				->select("`id`, `title`,`description`, `voornaam`,`achternaam`, `adres`, `postcode`, `plaats`, `geboortedatum`, `geslacht`, `plaats`, `emailadres`, `tel_mob`")
+				->get('wida_users')
+				->result();
+		}else{
+			return $this->db->order_by('Title',"Asc")
+				->select("CONCAT (`voornaam`, ' ', `achternaam`) AS `naam`  ")
+				->get('wida_users')
+				->result();
+		}
+	}
+
+
+
+	public function get_last_entry_event()
+	{
+		$last = $this->db->order_by('id',"desc")
+			->limit(1)
+			->get('wida_event')
+			->row();
+		return $last;
+	}
+
+	public function getBezetting($id)
+	{
+		$last = $this->db
+			->where('id', $id)
+			->get('wida_rooster')
+			->row();
+		return $last;
+	}
+
+	public function getDresscode($id)
+	{
+		$last = $this->db
+			->where('id', $id)
+			->select('id', 'Dresscode basis','Dresscode kleur' )
+			->get('wida_rooster')
+			->row();
+		return $last;
+	}
 
 }
